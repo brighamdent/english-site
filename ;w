@@ -1,0 +1,13 @@
+import { Link } from "react-router-dom"
+
+export function Navbar() {
+  return( 
+    <div className=''>
+      <div className="flex items-center justify-evenly bg-gray-200 h-12 px-4 drop-shadow-xl text-2xl font-mono font-light mb-1">
+        <Link to='/'>Home</Link >
+        <Link to='/pricing'>Pricing</Link>
+        <Link to='/about'>About</Link>
+      </div>
+    </div>
+  )
+}
