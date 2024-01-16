@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom'
 export function Pricing(){
  const pricingStuctures = [
     {
@@ -31,7 +32,7 @@ export function Pricing(){
                <p>{p.classes}</p>
                {p.bonus && <p>{p.bonus}</p>}
             </div>
-            <button className="rounded h-[10%] w-[70%] bg-blue-200">Seleccionar Plan</button>
+            <Link className="rounded h-[10%] w-[70%] bg-blue-200" to='/payment'>Seleccionar Plan</Link>
           </div>
         )}        
         
