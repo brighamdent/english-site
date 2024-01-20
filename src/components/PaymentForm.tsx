@@ -1,4 +1,4 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js"
+import { CardElement, useElements, useStripe,} from "@stripe/react-stripe-js"
 import axios from "axios"
 import { useState } from 'react'
 
@@ -23,32 +23,38 @@ const CARD_OPTIONS = {
 	}
 }
 
-export default function PaymentForm() {
+export default function PaymentForm({plan}) {
     const [success, setSuccess ] = useState(false)
     const stripe = useStripe()
     const elements = useElements()
 
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    const handleSubmit = async (event) => {
+        event.preventDefault()
         const {error, paymentMethod} = await stripe.createPaymentMethod({
             type: "card",
             card: elements.getElement(CardElement)
         })
+
+       
+    
+    const name = event.target.name.value;
+    const email = event.target.email.value;
 
 
     if(!error) {
         try {
             const {id} = paymentMethod
             const response = await axios.post("http://localhost:4000/payment", {
-                amount: 1000,
-                id
+                plan: plan,
+                id,
+                name,
+                email,
             })
 
             if(response.data.success) {
                 console.log("Successful payment")
                 setSuccess(true)
-            }
+            } 
 
         } catch (error) {
             console.log("Error", error)
@@ -60,18 +66,28 @@ export default function PaymentForm() {
 
     return (
         <>
-        {!success ? 
+        {!success ?  
         <form onSubmit={handleSubmit}>
+          <label>
+            Name:
+            <input type='text' name='name' required />
+          </label>
+          <label>
+            Email:
+            <input type='email' name='email' required />
+          </label>
+          <label>
             <fieldset className="FormGroup">
                 <div className="FormRow">
                     <CardElement options={CARD_OPTIONS}/>
                 </div>
             </fieldset>
-            <button>Pay</button>
+          </label>
+            <button className="pay-button">Pay</button>
         </form>
         :
        <div>
-           <h2>You just bought a sweet spatula congrats this is the best decision of you're life</h2>
+           <h2>You just started your language learning journey with us!</h2>
        </div> 
         }
             
