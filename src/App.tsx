@@ -10,10 +10,13 @@ import {SignIn} from './pages/SignIn'
 import StripeContainer from './components/StripeContainer'
 import { AuthProvider } from './context/AuthContext'
 import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import Account from './pages/Account'
 import PrivateRoutes from './components/PrivateRoutes'
 import ForgotPassword from './pages/ForgotPassword'
 import UpdateProfile from './pages/UpdateProfile'
+import DashBoard from './pages/Dashboard'
+import { ManageSubscription } from './pages/ManageSubscription'
+import ChangePassword from './pages/ChangePassword'
 
 function App() {
 
@@ -21,17 +24,21 @@ function App() {
     <>
     <AuthProvider>
     <Navbar/>  
-      <div>
+        <div className='z-10 flex justify-center align-center' >	
+
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/about' element={<About />} />
-          <Route path='/payment' element={<Payment/>} />
+          <Route path='/payment' element={<PrivateRoutes><Payment/></PrivateRoutes>} />
           <Route path='/signup' element={<SignIn/>} />
           <Route path='/login' element={<Login/>}/>
-          <Route path="/dashboard" element={<PrivateRoutes><Dashboard/></PrivateRoutes>}/>
+          <Route path="/account" element={<PrivateRoutes><Account/></PrivateRoutes>}/>
           <Route path="/update-profile" element={<PrivateRoutes><UpdateProfile/></PrivateRoutes>}/>
           <Route path='/forgot-password' element={<ForgotPassword/>}/>
+          <Route path='/dashboard' element={<PrivateRoutes><DashBoard/></PrivateRoutes>}/>
+          <Route path='/manage-subscription' element={<PrivateRoutes><ManageSubscription/></PrivateRoutes>}/>
+          <Route path='/change-password' element={<PrivateRoutes><ChangePassword/></PrivateRoutes>}/>
         </Routes>
       </div>
       </AuthProvider>

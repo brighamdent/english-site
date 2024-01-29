@@ -1,5 +1,8 @@
 import React, { useState, useContext, useEffect} from 'react'
 import { auth } from '../FireBase'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import { useLocation } from 'react-router-dom';
 
 const AuthContext = React.createContext()
 
@@ -10,9 +13,79 @@ export function useAuth(){
 export function AuthProvider({children}) {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState()
+  const [subscribed, setSubscribed] = useState()
+  const [subscriptionId, setSubscriptionId] = useState(null)
+  const [data,setData] = useState()
+  const location = useLocation()
+  
+  const getCurrentTime = async () => {
+     try {
+    const response = await fetch('http://worldtimeapi.org/api/ip');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.unixtime;
+  } catch (error) {
+    console.error('Error fetching the Unix timestamp:', error);
+    return null;
+  }
+  }
+  
+  const getUserData= () => {
+    if (currentUser) {
+      const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
+      userRef.get().then((doc) => {
+          setSubscribed(doc.data().subscribed);
+          setSubscriptionId(doc.data().subscriptionId)
+          setData(doc.data())
+      });
+    } else {
+      setSubscribed(false)
+      setSubscriptionId(null)
+      setData()
+    }
+  }
 
+  const checkSubscription = async () => {
+    const newDate = new Date( await getCurrentTime() )
+    console.log(newDate)
+    if(data.cancelAt){
+      if((data.cancelAt - 100000) <= await getCurrentTime()){
+        console.log('this will work')
+        const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
+        userRef.update({
+          subscribed: false,
+          cancelAt: null
+        })
+        
+      }else{
+        console.log('Subscription is still valid')
+        console.log(await getCurrentTime())
+        console.log(data.cancelAt-100000)
+      }
+    }
+   
+  }
+  
   const signup = (email, password) => {
+    console.log('attempted signup')
     return auth.createUserWithEmailAndPassword(email,password)
+  }
+  const createUserDoc = (email) => {
+    console.log('Createuserdoc is running	')
+    // const newUser = firebase.auth().currentUser;
+    // console.log(`new user: ${newUser}`)
+     return firebase.firestore().collection('Users').doc(email).set({
+          // Set initial fields (can be empty or with default values)
+          subscribed: false,
+          subscriptionId: 'none',
+          subscriptionType: 'none'
+          // Additional fields like 'displayName', 'birthday', etc. can be added here
+        });
+  }  
+  const verify = () => {
+    return auth.currentUser.sendEmailVerification()
   }
 
 
@@ -21,6 +94,7 @@ export function AuthProvider({children}) {
   }
 
   const logout = () =>{
+    setSubscribed(false)
     return auth.signOut()
   }
 
@@ -29,21 +103,22 @@ export function AuthProvider({children}) {
   }
 
   const updateEmail = (email) => {
+    
     console.log(currentUser)
     console.log(email)
-     if (currentUser) {
       console.log('im returning')
-      return auth.currentUser.updateEmail(email);
-    }
+      return currentUser.verifyBeforeUpdateEmail(email);
 
   }
 
   const updatePassword = (password) => {
     if (currentUser){
-    return auth.currentUser.updatePassword(password)
+    return currentUser.updatePassword(password)
 
     }
   }
+
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
@@ -53,16 +128,32 @@ export function AuthProvider({children}) {
     return unsubscribe
   },[])
 
+  useEffect(() => {
+    getCurrentTime()
+  },[currentUser])
+  
+  useEffect(() => {
+   getUserData() 
+    if(data){
+    checkSubscription()
+    }
+  },[location.pathname])
 
   const value = {
     currentUser,
     loading,
+    subscribed,
+    subscriptionId,
     signup,
+    createUserDoc,
+    verify,
     login,
     logout,
     resetPassword,
     updatePassword,
     updateEmail,
+    getUserData,
+    data
   }
   return (
   <AuthContext.Provider value={value}>

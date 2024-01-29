@@ -10,7 +10,7 @@ const stripeTestPromise = loadStripe(PUBLIC_KEY)
 
 export default function StripeContainer({plan}) {
   return (
-  <Elements stripe={stripeTestPromise}>
+  <Elements options={{locale:'es'}} stripe={stripeTestPromise}>
       <PaymentForm plan={plan}/>
     </Elements>
   )

@@ -1,76 +1,79 @@
-import React, { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
-import { Link, useNavigate } from 'react-router-dom'
-import { query } from 'firebase/database'
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import { query } from "firebase/database";
 
 export default function UpdateProfile() {
-  const { currentUser, updateEmail, updatePassword} = useAuth()
-  const [error, setError] = useState('')
-  const [loading,setLoading] = useState(false)
-  const navigate = useNavigate()
+  const { currentUser,logout, updateEmail} = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) =>{
-    event.preventDefault()
-    setLoading(true)
-    setError('')
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
+
     const email = event.target.email.value;
-    const password = event.target.password.value;   
-    const passwordConfirm = event.target.passwordConfirm.value;
-    if(password != passwordConfirm){
-      return setError('Passwords do not match')
-    }
 
-    let promises = []
-    if(email != currentUser.email){
-      promises.push(updateEmail(email))
-      console.log(email)
+    if (email != currentUser.email) {
+      try {
+        await updateEmail(email);
+        setMessage(
+          "Por favor dirigete al inbox para verificar tu nuevo correo y completar la actualizacion",
+        );
+      } catch {
+        setError("Failed to update email");
+        console.log("Error", error);
+      }
     }
-    if(password != currentUser.password){
-      promises.push(updatePassword(password))
-      console.log(password)
-    }
-
-    Promise.all(promises).then(() => {
-      navigate('/dashboard')
-    }).catch(() => {
-      console.error('Firebase Authentication Error:', error);
-    setError('Failed to Update')
-    }).finally(() => {
-    setLoading(false)
-    })
-      
-  }
+  };
 
   return (
-    <div>
-      <div>
-        <h2 className='text-center mb-4'>Update Profile</h2>
-        {error && <h1>{error}</h1>}
-        <form onSubmit={handleSubmit}>
-          <fieldset className='mb-2'>
-            <label >
-              Email
-              <input type='email' name='email' defaultValue={currentUser.email}/>
-            </label>
-          </fieldset>
-          <fieldset className='mb-2'>
-            <label >
-              Password
-              <input type='password' name='password' placeholder='Leave blank to keep the same'/>
-            </label>
-          </fieldset>
-          <fieldset className='mb-2'>
-            <label>
-              Password Confirmation
-              <input type='passwordConfirm' name='passwordConfirm' placeholder='Leave blank to keep the same'/>
-            </label>
-          </fieldset>
-          <button disabled={loading} className='w-100'>Update</button>
-        </form>
-      </div>
-      <div>
-        <Link to='/login'>Cancel</Link>
-      </div>
+    <div className='flex flex-col items-center pt-12 pb-12 p-4 sm:bg-white rounded-[10px] sm:w-[70vw] sm:shadow-sm text-2xl sm:text-3xl max-w-[500px]'>
+      {message ? (
+        <div>
+          <h1 className="text-center text-lg mb-6">{message}</h1>
+          <Link className="w-full" to="/login"><button onClick={async() => await logout()} className="w-full bg-blue-200 rounded-lg h-14">Iniciar Sesion</button></Link>
+        </div>
+      ) : (
+        <div>
+          <div >
+            <h2 className="text-center mb-14 text-4xl ">Actualizar Correo</h2>
+            {message && <h1>{message}</h1>}
+            {error && <h1>{error}</h1>}
+            <form onSubmit={handleSubmit}>
+              <fieldset className="mb-6">
+                <label className='block text-left'>
+                  <h1 className='mb-2 text-xl'>Email</h1>
+                  <input
+                    className="border-2 border-black/25 rounded-[10px] h-14 p-6"
+                    type="email"
+                    name="email"
+                    defaultValue={currentUser.email}
+                  />
+                </label>
+              </fieldset>
+              <div className="flex justify-between">
+                <Link className="w-[48%]" to="/account">
+                  <button className="w-full bg-blue-200 rounded-lg h-14">
+                    Cancelar
+                  </button>
+                </Link>
+                <button
+                  className="w-[48%] bg-blue-200 rounded-lg h-14"
+                  disabled={loading}
+                >
+                  Actualizar
+                </button>
+              </div>
+            </form>
+          </div>
+          <div></div>
+        </div>
+      )}
     </div>
-  )
-} 
+  );
+}

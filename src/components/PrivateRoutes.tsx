@@ -6,6 +6,6 @@ export default function PrivateRoute({ children }) {
   
 
  if(loading == false){
-  return currentUser ? children : <Navigate to="/login" />;
+  return currentUser ? children : <Navigate to="/signup" />;
   } 
 }
