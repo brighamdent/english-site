@@ -16,6 +16,8 @@ export function AuthProvider({children}) {
   const [subscribed, setSubscribed] = useState()
   const [subscriptionId, setSubscriptionId] = useState(null)
   const [data,setData] = useState()
+  const [getDataEffect, setGetDataEffect] = useState(false)
+
   const location = useLocation()
   
   const getCurrentTime = async () => {
@@ -35,34 +37,38 @@ export function AuthProvider({children}) {
   const getUserData= () => {
     if (currentUser) {
       const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
-      userRef.get().then((doc) => {
-          setSubscribed(doc.data().subscribed);
-          setSubscriptionId(doc.data().subscriptionId)
-          setData(doc.data())
-      });
+      userRef.onSnapshot(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      setSubscribed(data.subscribed ?? false);
+      setSubscriptionId(data.subscriptionId ?? null);
+      setData(data);
     } else {
-      setSubscribed(false)
-      setSubscriptionId(null)
-      setData()
+      // Handle the case where the document does not exist
+      setSubscribed(false);
+      setSubscriptionId(null);
+      setData(undefined); // or your initial state
     }
+  }, error => {
+    console.error("Error listening to the document: ", error);
+    // Handle errors
+  });
   }
+  }
+  useEffect(() => {
+    if(data){ console.log(data.cancelAt) }
+  },[data])
 
   const checkSubscription = async () => {
     const newDate = new Date( await getCurrentTime() )
-    console.log(newDate)
     if(data.cancelAt){
       if((data.cancelAt - 100000) <= await getCurrentTime()){
-        console.log('this will work')
         const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
         userRef.update({
           subscribed: false,
           cancelAt: null
         })
         
-      }else{
-        console.log('Subscription is still valid')
-        console.log(await getCurrentTime())
-        console.log(data.cancelAt-100000)
       }
     }
    
@@ -80,6 +86,7 @@ export function AuthProvider({children}) {
           // Set initial fields (can be empty or with default values)
           subscribed: false,
           subscriptionId: 'none',
+          subscriptionItemId: 'none',
           subscriptionType: 'none'
           // Additional fields like 'displayName', 'birthday', etc. can be added here
         });
@@ -133,11 +140,12 @@ export function AuthProvider({children}) {
   },[currentUser])
   
   useEffect(() => {
+   console.log(`getDataEffect: ${getDataEffect}`) 
    getUserData() 
     if(data){
     checkSubscription()
     }
-  },[location.pathname])
+  },[location.pathname,currentUser,getDataEffect])
 
   const value = {
     currentUser,
@@ -153,7 +161,9 @@ export function AuthProvider({children}) {
     updatePassword,
     updateEmail,
     getUserData,
-    data
+    data,
+    getDataEffect,
+    setGetDataEffect
   }
   return (
   <AuthContext.Provider value={value}>

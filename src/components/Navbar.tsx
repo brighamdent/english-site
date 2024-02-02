@@ -21,8 +21,8 @@ export function Navbar() {
   }, [location.pathname]);
 
   return (
-    <div className="relative z-50">
-      <div className="sticky top-0 p-2 bg-white drop-shadow-sm h-24 lg:h-16 px-4 text-2xl mb-10 sm:z-30">
+    <div className="fixed z-50 w-full">
+      <div className=" top-0 p-2 bg-white drop-shadow-sm h-24 lg:h-16 px-4 text-2xl mb-10 sm:z-30">
         <div className="flex justify-between">
           <div className="flex text-right items-center pr-3 lg:hidden m-2">
             <button className="text-[40px] p-4" onClick={toggleModal}>
@@ -58,7 +58,7 @@ export function Navbar() {
       </div>
 
       {isOpened && (
-        <div className=" absolute w-[100vw] h-[calc(100vh-96px)] lg:h-[calc(100vh-48px)] text-2xl  text-right top-24 lg:top-12 lg:hidden">
+        <div className=" fixed w-[100vw] h-[calc(100vh-96px)] lg:h-[calc(100vh-48px)] text-2xl  text-left top-24 lg:top-12 lg:hidden">
           <ul className="p-4 bg-white z-20 sm:fixed right-0 sm:h-[100%] ">
             <li className="p-2">
               <Link to="/">Inicio</Link>
@@ -84,7 +84,7 @@ export function Navbar() {
           </ul>
           <div
             onClick={toggleModal}
-            className="fixed w-[100vw] h-[100vh] bg-black/50 z-10"
+            className="fixed w-[100vw] h-full bg-black/50 z-10"
           />
         </div>
       )}

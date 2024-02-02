@@ -58,13 +58,17 @@ export default function PaymentForm({plan}) {
             })
             if(response.data.success) {
                 console.log("Successful payment")
+            const customerId = response.data.customerId
             const subscriptionId = response.data.subscriptionId 
+            const subscriptionItemId = response.data.subscriptionItemId
             const subscriptionType = response.data.subscriptionType
             console.log(response)   
                 setSuccess(true)
                 userRef.update({
               subscribed: true,
+              customerId:customerId,
               subscriptionId: subscriptionId,
+              subscriptionItemId: subscriptionItemId,
               subscriptionType: subscriptionType
             })
             .then(() => {
@@ -88,7 +92,7 @@ export default function PaymentForm({plan}) {
         <>
         {!success ?  
         <form onSubmit={handleSubmit}>
-          <fieldset className="mb-6 flex justify-around">
+          <fieldset className="mb-6 flex flex-col md:flex-row justify-around">
             <label className="block text-left">
               <h1 className='mb-2 text-xl'>Nombre</h1>
               <input className=' border-2 border-black/25 rounded-[10px] h-14 p-6' type='text' name='firstName' required />

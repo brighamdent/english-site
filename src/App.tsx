@@ -24,7 +24,7 @@ function App() {
     <>
     <AuthProvider>
     <Navbar/>  
-        <div className='z-10 flex justify-center align-center' >	
+        <div className=' flex justify-center align-center ' >	
 
         <Routes>
           <Route path='/' element={<Home />} />

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 export function Home(){
   const { subscribed } = useAuth()
   return(
-    <div>
+    <div className='mt-20'>
       <div className="text-center items-center flex mt-[5%] sm:m-5 ">
       <div className=" flex items-center flex-col m-4 ">
         <h1 className="text-3xl sm:text-4xl text-center">¡Empieza a hablar el ingles con confianza! </h1>
