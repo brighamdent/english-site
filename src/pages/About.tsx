@@ -1,13 +1,14 @@
 import portrait from '../assets/portrait.jpg'
 export function About(){
-  const h1 = 'm-3 text-lg font-bold'
+  const h1 = 'lg:m-3 text-lg text-center font-bold mt-6'
   return(
-  <div className='flex justify-around'>
-<div className='bg-white rounded-lg shadow p-4 w-[30%] h-[80%] m-5'>
-        <img src={portrait} />
+  <div className='flex flex-col lg:flex-row items-center justify-around lg:items-start'>
+      <h1 className='text-4xl  lg:hidden'>Quiénes Somos</h1>
+<div className='bg-white rounded-lg shadow p-4 m-2'>
+        <img className='w-72 lg:w-[450px] ' src={portrait} />
       </div>
-      <div className='flex flex-col w-[60%] justify-around  '>
-      <h1 className='text-4xl ml-5'>Quiénes Somos</h1>
+      <div className='text-start lg:text-start flex flex-col  justify-around lg:pr-8 lg:pl-8 lg:w-[60%]'>
+      <h1 className='text-4xl  hidden lg:block text-center'>Quiénes Somos</h1>
         <h1 className={h1}>¡Bienvenidos a English Direct!</h1>
         <p>
           ¡Hola a todos! Soy John, el fundador de English Direct, un apasionado profesor de inglés con más de cuatro años de experiencia enseñando. Soy originario de Arizona, Estados Unidos, y estoy emocionado de compartir mi amor por el inglés contigo a través de este espacio educativo.

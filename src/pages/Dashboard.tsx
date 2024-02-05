@@ -1,9 +1,10 @@
 import React from 'react'
-
 export default function DashBoard() {
   return (
     <div>
-      <h1>Zoom Link: Secret Zoom Link</h1>
+      <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
+        Zoom Link
+      </a>
     </div>
   )
 }

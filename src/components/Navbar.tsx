@@ -59,7 +59,7 @@ export function Navbar() {
 
       {isOpened && (
         <div className=" fixed w-[100vw] h-[calc(100vh-96px)] lg:h-[calc(100vh-48px)] text-2xl  text-left top-24 lg:top-12 lg:hidden">
-          <ul className="p-4 bg-white z-20 sm:fixed right-0 sm:h-[100%] ">
+          <ul className="p-4 bg-white z-20 sm:fixed left-0 sm:h-[100%] ">
             <li className="p-2">
               <Link to="/">Inicio</Link>
             </li>

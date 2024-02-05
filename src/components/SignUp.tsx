@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { query } from "firebase/database";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function SignUp() {
   const { signup, createUserDoc} = useAuth();
@@ -11,7 +12,7 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('hello im working')
+    setLoading(true);
     const email = event.target.email.value;
     const password = event.target.password.value;
     const passwordConfirm = event.target.passwordConfirm.value;
@@ -20,7 +21,6 @@ export default function SignUp() {
     }
     try {
       setError("");
-      setLoading(true);
       await signup(email, password)
       await createUserDoc(email)
       navigate("/pricing");
@@ -30,7 +30,9 @@ export default function SignUp() {
     setLoading(false);
   };
   return (
-    <div className='flex flex-col items-center  pt-12 pb-2 p-4 sm:bg-white rounded-[10px] sm:w-[70vw] sm:shadow-sm text-2xl sm:text-3xl max-w-[500px]'>
+    <div>
+      {loading ? <div className="bg-grey-200 w-full h-full flex items-center justify-center"><FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> :
+      <div className='flex flex-col items-center  pt-12 pb-2 p-4 sm:bg-white rounded-[10px] sm:w-[70vw] sm:shadow-sm text-2xl sm:text-3xl max-w-[500px]'>
       <div className="mb-8">
         <h2 className="text-center mb-14 text-4xl">Registrarse</h2>
         {error && <h1>{error}</h1>}
@@ -64,6 +66,7 @@ export default function SignUp() {
         ¿Ya tienes cuenta?
         <Link className='text-blue-600 ' to="/login">Login</Link>
       </div>
+    </div>}
     </div>
   );
 }

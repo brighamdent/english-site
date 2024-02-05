@@ -1,7 +1,9 @@
-import { CardElement, useElements, useStripe,} from "@stripe/react-stripe-js"
+import { PaymentElement, CardElement, useElements, useStripe,} from "@stripe/react-stripe-js"
 import axios from "axios"
 import { useState } from 'react'
 import { useAuth } from "../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
@@ -28,12 +30,14 @@ const CARD_OPTIONS = {
 
 export default function PaymentForm({plan}) {
     const [success, setSuccess ] = useState(false)
+    const [loading, setLoading] = useState(false)
     const stripe = useStripe()
     const elements = useElements()
     const {currentUser, getUserData} = useAuth() 
     const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
 
     const handleSubmit = async (event) => {
+        setLoading(true)
         event.preventDefault()
         const {error, paymentMethod} = await stripe.createPaymentMethod({
             type: "card",
@@ -86,12 +90,15 @@ export default function PaymentForm({plan}) {
     } else {
         console.log(error.message)
     }
+    setLoading(false)
 }
 
     return (
         <>
         {!success ?  
-        <form onSubmit={handleSubmit}>
+        <div>
+      {loading ? <div className="bg-grey-200 w-full h-full flex items-center justify-center"><FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> :
+          <form onSubmit={handleSubmit}>
           <fieldset className="mb-6 flex flex-col md:flex-row justify-around">
             <label className="block text-left">
               <h1 className='mb-2 text-xl'>Nombre</h1>
@@ -104,13 +111,14 @@ export default function PaymentForm({plan}) {
           </fieldset>
           <label>
             <fieldset className="FormGroup">
-                <div className="FormRow">
-                    <CardElement options={CARD_OPTIONS}/>
-                </div>
+              <div className="FormRow">
+                <CardElement options={CARD_OPTIONS}/>
+              </div>
             </fieldset>
           </label>
-            <button className="pay-button">Pagar</button>
-        </form>
+          <button className="pay-button">Pagar</button>
+        </form>}
+        </div>
         :
        <div>
            <h2>Felicidades, ya eres parte de English Direct! Nos vemos en tu primera clase.</h2>
