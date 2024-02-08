@@ -26,6 +26,7 @@ export default function SignUp() {
       navigate("/pricing");
     } catch {
       setError(`Failed to create account`);
+    setLoading(false);
     }
     setLoading(false);
   };

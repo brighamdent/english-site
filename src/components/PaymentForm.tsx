@@ -1,56 +1,88 @@
-import { PaymentElement, CardElement, useElements, useStripe,} from "@stripe/react-stripe-js"
-import axios from "axios"
-import { useState } from 'react'
+import React from "react";
+import axios from "axios";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import {
+  useStripe,
+  useElements,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
+} from "@stripe/react-stripe-js";
 
+export default function PaymentForm({plan,success, setSuccess}) {
+  const [loading, setLoading] = useState(false);
+  const { currentUser, getUserData } = useAuth();
+  const userRef = firebase
+    .firestore()
+    .collection("Users")
+    .doc(currentUser.email);
+  const stripe = useStripe();
+  const elements = useElements();
 
-const CARD_OPTIONS = {
-	iconStyle: "solid",
-	style: {
-		base: {
-			iconColor: "#c4f0ff",
-			color: "#fff",
-			fontWeight: 500,
-			fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
-			fontSize: "16px",
-			fontSmoothing: "antialiased",
-			":-webkit-autofill": { color: "#fce883" },
-			"::placeholder": { color: "#87bbfd" }
-		},
-		invalid: {
-			iconColor: "#ffc7ee",
-			color: "#ffc7ee"
-		}
-	}
-}
+  const CARDS_ELEMENT_OPTIONS = {
+  showIcon: true,
+  style: {
+    base: {
+      color: '#000',
+      fontSize: '25px',
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      '::placeholder': {
+        color: '#aab7c4',
+      },
+      iconColor: '#666EE8',
+      '::placeholder': {
+        color: '#aab7c4',
+      },
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a',
+    },
+  },
+};
+  const CARD_ELEMENT_OPTIONS = {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  };
 
-export default function PaymentForm({plan}) {
-    const [success, setSuccess ] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const stripe = useStripe()
-    const elements = useElements()
-    const {currentUser, getUserData} = useAuth() 
-    const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    const handleSubmit = async (event) => {
-        setLoading(true)
-        event.preventDefault()
-        const {error, paymentMethod} = await stripe.createPaymentMethod({
-            type: "card",
-            card: elements.getElement(CardElement)
-        })
+    if (!stripe || !elements) {
+      return;
+    }
 
-       
-    
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    const cardExpiryElement = elements.getElement(CardExpiryElement);
+    const cardCvcElement = elements.getElement(CardCvcElement);
+    // You can also handle validation and formatting for each field individually
     const firstName = event.target.firstName.value;
     const lastName = event.target.lastName.value;
     const name = `${firstName} ${lastName}`
 
-
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardNumberElement,
+      // Additional information can be passed here
+    });
     if(!error) {
         try {
             const {id} = paymentMethod
@@ -91,40 +123,51 @@ export default function PaymentForm({plan}) {
         console.log(error.message)
     }
     setLoading(false)
-}
 
-    return (
-        <>
-        {!success ?  
-        <div>
-      {loading ? <div className="bg-grey-200 w-full h-full flex items-center justify-center"><FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> :
-          <form onSubmit={handleSubmit}>
-          <fieldset className="mb-6 flex flex-col md:flex-row justify-around">
-            <label className="block text-left">
-              <h1 className='mb-2 text-xl'>Nombre</h1>
-              <input className=' border-2 border-black/25 rounded-[10px] h-14 p-6' type='text' name='firstName' required />
-            </label>
-            <label>
-              <h1 className='mb-2 text-xl'>Apellido</h1>
-              <input className=' border-2 border-black/25 rounded-[10px] h-14 p-6' type='text' name='lastName' required />
-            </label>
-          </fieldset>
-          <label>
-            <fieldset className="FormGroup">
-              <div className="FormRow">
-                <CardElement options={CARD_OPTIONS}/>
-              </div>
-            </fieldset>
+  };
+
+  return (
+    <div>
+      <form className='flex flex-col items-center' onSubmit={handleSubmit}>
+        <fieldset className="md:mb-4 flex flex-col items-center md:flex-row">
+          <label className="block text-left text-xl mb-2 md:mb-0">
+            <h1 className='ml-2 mb-2'>Nombre</h1>
+            <input className='text-[25px] border-2 border-black/25 rounded-[10px] p-3 w-[325px] md:w-[225px]' type="text" name="firstName" required/>
           </label>
-          <button className="pay-button">Pagar</button>
-        </form>}
-        </div>
-        :
-       <div>
-           <h2>Felicidades, ya eres parte de English Direct! Nos vemos en tu primera clase.</h2>
-       </div> 
-        }
-            
-        </>
-    )
+          <label className="block text-xl text-left md:ml-4 mb-2 md:mb-0">
+            <h1 className='ml-2 mb-2'>Apellido</h1>
+            <input className=' text-[25px] border-2 border-black/25 rounded-[10px] pl-2 p-3 w-[325px] md:w-[225px]' type="text" name="lastName" required/>
+          </label>
+        </fieldset>
+        <fieldset>
+          <label className="block text-left mb-4 w-[325px] md:w-[466px]">
+          <h1 className='ml-2 mb-2 text-xl'>Numero de Tarjeta</h1>
+           <div className="bg-white flex items-center border-2 pl-2 border-black/25 rounded-[10px]">
+            <CardNumberElement  options={CARDS_ELEMENT_OPTIONS} />
+           </div>
+          </label>
+        </fieldset>
+        <fieldset className="mb-4 flex flex-col md:flex-row items-center">
+          <label className="block text-left mb-2">
+            <h1 className=' ml-2 md:ml-0 mb-2 text-xl'>Fecha de Vencimiento</h1>
+            <div className="bg-white flex items-center  border-2 pl-2 border-black/25 rounded-[10px] w-[325px] md:w-[225px]">
+              <CardExpiryElement options={CARDS_ELEMENT_OPTIONS} />
+            </div>
+          </label>
+          <label className="block text-left md:ml-4 mb-2">
+            <h1 className='ml-2 mb-2 text-xl'>CVC</h1>
+            <div className="bg-white flex items-center  border-2 pl-2 border-black/25 rounded-[10px] w-[325px] md:w-[225px]">
+              <CardCvcElement options={CARDS_ELEMENT_OPTIONS} />
+            </div>
+          </label>
+        </fieldset>
+        <button className='w-[325px] md:w-[466px] rounded-[10px] bg-blue-200 text-2xl p-3' type="submit" disabled={!stripe}>
+          Inciar Subscripcion
+        </button>
+      </form>
+
+      
+
+    </div>
+  );
 }
