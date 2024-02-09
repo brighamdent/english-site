@@ -28,7 +28,8 @@ export default function Login() {
   }
   return (
     <div>
-      {loading ? <div className="bg-grey-200 w-full h-full flex items-center justify-center"><FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> :
+      {loading && <div className="fixed bg-black/50 left-0 z-[1000]  top-0 w-full h-full flex items-center justify-center">
+        <FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> }
       <div className='flex flex-col items-center pt-12 pb-12 p-4 sm:bg-white rounded-[10px] sm:w-[70vw] sm:shadow-sm text-2xl sm:text-3xl max-w-[500px]'>
       <div className='mb-8'>
         <h2 className='text-center mb-14 text-4xl '>Iniciar Sesión</h2>
@@ -58,7 +59,7 @@ export default function Login() {
       <div className='text-lg text-blue-600'>
         <Link to='/forgot-password'>¿Olvidaste tu contraseña?</Link>
       </div>
-    </div>}
+    </div>
     </div>
   )
 } 

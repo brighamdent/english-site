@@ -14,8 +14,7 @@ import {
   CardCvcElement,
 } from "@stripe/react-stripe-js";
 
-export default function PaymentForm({plan,success, setSuccess}) {
-  const [loading, setLoading] = useState(false);
+export default function PaymentForm({plan,success, setSuccess, loading, setLoading}) {
   const { currentUser, getUserData } = useAuth();
   const userRef = firebase
     .firestore()
@@ -51,7 +50,7 @@ export default function PaymentForm({plan,success, setSuccess}) {
         color: "#32325d",
         fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
         fontSmoothing: "antialiased",
-        fontSize: "16px",
+        fontSize: "25px",
         "::placeholder": {
           color: "#aab7c4",
         },
@@ -65,6 +64,7 @@ export default function PaymentForm({plan,success, setSuccess}) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true)
 
     if (!stripe || !elements) {
       return;

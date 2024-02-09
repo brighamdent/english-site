@@ -117,7 +117,8 @@ export const ManageSubscription = () => {
 
   return (
     <div className="p-4 sm:bg-white rounded-lg mb-12">
-      {loading ? <div className="bg-grey-200 w-full h-full flex items-center justify-center"><FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> :
+{loading && <div className="fixed bg-black/50 left-0 z-[1000]  top-0 w-full h-full flex items-center justify-center">
+  <FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> }
 
       <div className="flex flex-col items-center">
       {message && <h1 className="bg-green-200 w-full rounded-md p-2 h-16 mb-5">{message}</h1>}
@@ -152,7 +153,7 @@ export const ManageSubscription = () => {
       {data && !data.cancelAt && <button className='p-2 bg-red-400 rounded-lg h-10 m-4' onClick={handleCancelSubscription}>Cancel Subscription</button> }      
       {data && data.cancelAt && <button className='p-2 bg-blue-200 rounded-lg h-10 m-4' onClick={handleResumeSubscription}>Reanudar Subscripcion</button> }      
     </div>
-      }
+      
     </div>
   )
 }

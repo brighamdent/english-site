@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function ChangePassword() {
   const { login,currentUser, updatePassword} = useAuth()
@@ -35,6 +37,8 @@ export default function ChangePassword() {
   }
   return (
     <div className='flex flex-col items-center pt-12 pb-12 p-4 sm:bg-white rounded-[10px] sm:w-[70vw] sm:shadow-sm text-2xl sm:text-3xl max-w-[500px]'>
+      {loading && <div className="fixed bg-black/50 left-0 z-[1000]  top-0 w-full h-full flex items-center justify-center">
+        <FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> }
       <div className='mb-8'>
         <h2 className='text-center mb-14 text-4xl '>Cambiar Contraseña</h2>
         {error && <h1>{error}</h1>}
