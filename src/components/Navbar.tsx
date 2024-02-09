@@ -37,20 +37,20 @@ export function Navbar() {
         <div className="hidden lg:flex justify-between items-center">
           <img src={longLogo} className="h-12 cursor-pointer" onClick={() => navigate('/')}/>
           <div className="flex justify-between w-[45%]">
-            <Link to="/">Inicio</Link>
+            <Link className="hover:border-b border-gray-300" to="/">Inicio</Link>
             {subscribed ? (
-              <Link to="dashboard">Dashboard</Link>
+              <Link className="hover:border-b border-gray-300" to="dashboard">Tus Clases</Link>
             ) : (
-                <Link to="/pricing">Costo</Link>
+                <Link className="hover:border-b border-gray-300" to="/pricing">Costo</Link>
               )}
-            <Link to="/about">Quiénes Somos</Link>
+            <Link className="hover:border-b border-gray-300" to="/about">Quiénes Somos</Link>
           </div>
           {currentUser ? (
-            <Link className="text-sm" to="/account">
+            <Link className="hover:border-b border-gray-300 text-sm" to="/account">
               Tu Cuenta
             </Link>
           ) : (
-            <Link className="text-sm" to="signup">
+            <Link className="hover:border-b border-gray-300 text-sm" to="signup">
               Iniciar Sesión/Registrarse
             </Link>
           )}
@@ -63,12 +63,14 @@ export function Navbar() {
             <li className="p-2">
               <Link to="/">Inicio</Link>
             </li>
-            <li className="p-2">
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-            <li className="p-2">
-              <Link to="/pricing">Costo</Link>
-            </li>
+            {subscribed ?
+              <li className="p-2">
+                <Link to="/dashboard">Tus Clases</Link>
+              </li> :
+                <li className="p-2">
+                  <Link to="/pricing">Costo</Link>
+                    </li>
+            }
             <li className="p-2">
               <Link to="/about">Quiénes Somos</Link>
             </li>

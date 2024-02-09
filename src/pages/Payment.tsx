@@ -29,7 +29,7 @@ export function Payment(props) {
               </div>
             </div>
             <div className="md:w-[70%]flex flex-col items-center pl-4">
-              <h1 className="hidden md:block text-3xl text-center mb-12">Finaliza tu inscripcion!</h1>
+              <h1 className="hidden md:block text-3xl text-center mb-6">Finaliza tu inscripcion!</h1>
               <StripeContainer plan={pricingStructure.plan} success={success} setSuccess={setSuccess} loading={loading} setLoading={setLoading}/>
             </div> 
 

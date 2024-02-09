@@ -4,8 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import useUnixTimeToDate from "../hook/useUnixToDate";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faGraduationCap, faAngleDown, faAngleUp, faSpinner, faCircleExclamation, faXmark} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faGraduationCap, faAngleDown, faAngleUp, faSpinner, faCircleExclamation, faXmark, faSquareCheck} from "@fortawesome/free-solid-svg-icons";
 import { PlanTiles } from "../components/PlanTiles";
 
 
@@ -121,11 +121,15 @@ export const ManageSubscription = () => {
   <FontAwesomeIcon className='fixed top-1/2 text-6xl' icon={faSpinner} spinPulse /></div> }
 
       <div className="flex flex-col items-center">
-      {message && <h1 className="bg-green-200 w-full rounded-md p-2 h-16 mb-5">{message}</h1>}
+      {message && <div className="flex items-center bg-green-200 text-green-500 border border-green-500 w-full rounded-md p-4 h-16 mb-5">
+            <FontAwesomeIcon className="mr-4" icon={faSquareCheck} />
+            <h1>{message}</h1>
+            <FontAwesomeIcon className="ml-4 lg:ml-[600px]" onClick={() => setMessage('')} icon={faXmark} />
+          </div>}
       {error && <div className="flex items-center bg-red-200 text-red-500 border border-red-500 w-full rounded-md p-4 h-16 mb-5">
             <FontAwesomeIcon className="mr-4" icon={faCircleExclamation} />
             <h1>{error}</h1>
-            <FontAwesomeIcon className="ml-4 lg:ml-[600px]" icon={faXmark} />
+            <FontAwesomeIcon className="ml-4 lg:ml-[600px]" onClick={() => setError('')} icon={faXmark} />
           </div>}
       <h1 className="text-[23px] border-b border-gray-300 mb-4 text-center">Administrar Subscripcion</h1>
       {data && 
@@ -151,7 +155,7 @@ export const ManageSubscription = () => {
             <PlanTiles handleChangeSubscription={handleChangeSubscription}manageSubscriptionPage={true}/>
           </div>
       {data && !data.cancelAt && <button className='p-2 bg-red-400 rounded-lg h-10 m-4' onClick={handleCancelSubscription}>Cancel Subscription</button> }      
-      {data && data.cancelAt && <button className='p-2 bg-blue-200 rounded-lg h-10 m-4' onClick={handleResumeSubscription}>Reanudar Subscripcion</button> }      
+      {data && data.cancelAt && <button className='p-2 bg-blue-200 hover:bg-blue-300 rounded-lg h-10 m-4' onClick={handleResumeSubscription}>Reanudar Subscripcion</button> }      
     </div>
       
     </div>

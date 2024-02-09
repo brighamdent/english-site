@@ -7,20 +7,23 @@ export function PlanTiles(props) {
       plan: 1,
       name: "Base",
       price: "600 MXN",
-      classes: "2 Clases grupales de una hora",
+      classes: "Incluye 2 clases grupales por semana.",
+      duration: "1 hora",
     },
     {
       plan: 2,
       name: "Estudiante+",
       price: "900 MXN",
-      classes: "2 Clases grupales de 1 hora por semana",
+      classes: " 2 Clases grupales por semana",
+      duration: "1 hora",
       bonus: "1 Clase privada al mes",
     },
     {
       plan: 3,
       name: "Estudiante Privado",
       price: "1200 MXN",
-      classes: "1 clases de una hora completamente privada",
+      classes: "1 clase privada por semana",
+      duration: "1 hora",
       bonus: "Un plan de aprendizaje personalizado",
     },
   ];
@@ -36,13 +39,13 @@ export function PlanTiles(props) {
             <h2 className=" text-2xl ">{p.name}</h2>
           </div>
           <h1 className="text-5xl">{p.price}</h1>
-          <div>
-            <p>{p.classes}</p>
-            {p.bonus && <p>{p.bonus}</p>}
+          <div className="text-left">
+            <p className="mb-4">{p.classes}</p>
+            {p.bonus && <p className="border-t pt-3 border-gray-300">{`Bono: ${ p.bonus }`}</p>}
           </div>
           {props.pricingPage && (
             <Link
-              className="rounded bg-blue-200 text-2xl p-3 flex justify-center items-center"
+              className="rounded bg-blue-200 hover:bg-blue-300 text-2xl p-3 flex justify-center items-center"
               to="/payment"
               state={{ data: pricingStuctures[index] }}
             >
@@ -54,7 +57,7 @@ export function PlanTiles(props) {
               className={
                 p.name == data.subscriptionType
                   ? "rounded bg-gray-300 text-black/50 text-2xl p-3 flex justify-center items-center"
-                  : "rounded bg-blue-200 text-2xl p-3 flex justify-center items-center"
+                  : "rounded bg-blue-200 hover:bg-blue-300 text-2xl p-3 flex justify-center items-center"
               }
             >
               <button

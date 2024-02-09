@@ -1,11 +1,10 @@
-import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCircleExclamation, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {
   useStripe,
   useElements,
@@ -16,6 +15,8 @@ import {
 
 export default function PaymentForm({plan,success, setSuccess, loading, setLoading}) {
   const { currentUser, getUserData } = useAuth();
+  const [ error, setError ] = useState('')
+
   const userRef = firebase
     .firestore()
     .collection("Users")
@@ -65,6 +66,7 @@ export default function PaymentForm({plan,success, setSuccess, loading, setLoadi
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true)
+    setError('')
 
     if (!stripe || !elements) {
       return;
@@ -73,7 +75,7 @@ export default function PaymentForm({plan,success, setSuccess, loading, setLoadi
     const cardNumberElement = elements.getElement(CardNumberElement);
     const cardExpiryElement = elements.getElement(CardExpiryElement);
     const cardCvcElement = elements.getElement(CardCvcElement);
-    // You can also handle validation and formatting for each field individually
+
     const firstName = event.target.firstName.value;
     const lastName = event.target.lastName.value;
     const name = `${firstName} ${lastName}`
@@ -118,9 +120,12 @@ export default function PaymentForm({plan,success, setSuccess, loading, setLoadi
 
         } catch (error) {
             console.log("Error", error)
+            setError('There was an error processing your payment')
         }
     } else {
         console.log(error.message)
+            setError('There was an error processing your payment')
+
     }
     setLoading(false)
 
@@ -128,6 +133,11 @@ export default function PaymentForm({plan,success, setSuccess, loading, setLoadi
 
   return (
     <div>
+      {error && <div className="flex items-center bg-red-200 text-red-500 border border-red-500 w-[325px] md:w-[466px] rounded-md p-4 h-16 mb-2 md:mb-4">
+            <FontAwesomeIcon className="mr-4" icon={faCircleExclamation} />
+            <h1>{error}</h1>
+            <FontAwesomeIcon className="ml-4 lg:ml-[15px]" onClick={() => setError('')} icon={faXmark} />
+          </div>}
       <form className='flex flex-col items-center' onSubmit={handleSubmit}>
         <fieldset className="md:mb-4 flex flex-col items-center md:flex-row">
           <label className="block text-left text-xl mb-2 md:mb-0">
@@ -161,7 +171,7 @@ export default function PaymentForm({plan,success, setSuccess, loading, setLoadi
             </div>
           </label>
         </fieldset>
-        <button className='w-[325px] md:w-[466px] rounded-[10px] bg-blue-200 text-2xl p-3' type="submit" disabled={!stripe}>
+        <button className='w-[325px] md:w-[466px] rounded-[10px] bg-blue-200 hover:bg-blue-300 text-2xl p-3' type="submit" disabled={!stripe}>
           Inciar Subscripcion
         </button>
       </form>

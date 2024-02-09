@@ -47,8 +47,8 @@ export default function Account() {
           </div>
         </Link>
         <Link to="/change-password">
-          <div className="flex justify-between items-center border-b border-gray-300 p-4">
-            <div className="flex items-center">
+          <div className="flex justify-between items-center border-b border-gray-300  p-4">
+            <div className="flex items-center ">
               <FontAwesomeIcon icon={faLock} />
               <h1 className="pl-5">Cambiar Contraseña</h1>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faCircleExclamation, faXmark} from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
@@ -22,7 +22,7 @@ export default function Login() {
     await login(email,password)
       navigate('/account')
     } catch{
-      setError(`Failed to log in`)
+      setError('El nombre de usuario y la contraseña no coinciden.')
     }
     setLoading(false)
   }
@@ -33,7 +33,11 @@ export default function Login() {
       <div className='flex flex-col items-center pt-12 pb-12 p-4 sm:bg-white rounded-[10px] sm:w-[70vw] sm:shadow-sm text-2xl sm:text-3xl max-w-[500px]'>
       <div className='mb-8'>
         <h2 className='text-center mb-14 text-4xl '>Iniciar Sesión</h2>
-        {error && <h1>{error}</h1>}
+      {error && <div className="text-sm sm:text-lg flex items-center bg-red-200 text-red-500 border border-red-500 w-full rounded-md p-4 h-16 mb-4 max-w-[330px] sm:max-w-[400px]">
+            <FontAwesomeIcon className="mr-4" icon={faCircleExclamation} />
+            <h1>{error}</h1>
+            <FontAwesomeIcon className="ml-6 lg:ml-[10px]" onClick={() => setError('')} icon={faXmark} />
+          </div>}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <fieldset className='mb-6'>
@@ -49,14 +53,14 @@ export default function Login() {
               </label>
             </fieldset>
           </div>
-          <button disabled={loading} className='w-full bg-blue-200 rounded-lg h-14'>Iniciar Sesión</button>
+          <button disabled={loading} className='w-full bg-blue-200 hover:bg-blue-300 rounded-lg h-14'>Iniciar Sesión</button>
         </form>
       </div>
       <div className='mb-2 text-xl'>
         <strong>¿No Tienes Cuenta? </strong>
-        <Link className='text-blue-600 ' to='/signup'>Registrarse</Link>
+        <Link className='text-blue-600 hover:border-b border-blue-600/20' to='/signup'>Registrarse</Link>
       </div>
-      <div className='text-lg text-blue-600'>
+      <div className='text-lg text-blue-600 hover:border-b border-blue-600/20'>
         <Link to='/forgot-password'>¿Olvidaste tu contraseña?</Link>
       </div>
     </div>

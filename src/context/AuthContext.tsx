@@ -34,7 +34,7 @@ export function AuthProvider({children}) {
   }
   }
   
-  const getUserData= () => {
+  const getUserData = () => {
     if (currentUser) {
       const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
       userRef.onSnapshot(doc => {
