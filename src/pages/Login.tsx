@@ -22,7 +22,7 @@ export default function Login() {
     await login(email,password)
       navigate('/account')
     } catch{
-      setError('El nombre de usuario y la contraseña no coinciden.')
+   setError('El nombre de usuario y la contraseña no coinciden.')
     }
     setLoading(false)
   }
