@@ -11,7 +11,7 @@ export default function DashBoard() {
         <FontAwesomeIcon icon={faGraduationCap} />
         <h1 className="text-xl md:text-2xl pl-8">{data.subscriptionType}</h1>
       </div>
-      <h3 className="mb-4">Horario: Lunes y Miercoles a las 7pm</h3>
+      <h3 className="mb-4">{data.schedule}</h3>
       <a
         href="https://us06web.zoom.us/j/88265664418?pwd=Y1VQY2ZuVHVnMVNQSng5eUw3N1FUUT09"
         target="_blank"

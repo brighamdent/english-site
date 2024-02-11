@@ -7,7 +7,7 @@ export function About(){
 <div className='bg-white rounded-lg shadow p-4 m-2'>
         <img className='w-72 lg:w-[450px] ' src={portrait} />
       </div>
-      <div className='text-start lg:text-start flex flex-col  justify-around lg:pr-8 lg:pl-8 lg:w-[60%]'>
+      <div className=' lg:text-start flex flex-col p-6 lg:p-0 text-center justify-around lg:pr-8 lg:pl-8 lg:w-[60%]'>
       <h1 className='text-4xl  hidden lg:block text-center'>Quiénes Somos</h1>
         <h1 className={h1}>¡Bienvenidos a English Direct!</h1>
         <p>
