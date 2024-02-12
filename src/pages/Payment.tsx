@@ -38,7 +38,7 @@ export function Payment(props) {
       navigate('/pricing')
     }
   }
-  
+
   return (
     <div className="relative">
       {loading && <div className="fixed bg-black/50 left-0 z-[1000]  top-0 w-full h-full flex items-center justify-center">
@@ -55,7 +55,7 @@ export function Payment(props) {
                 {pricingStructure.bonus && <p>{pricingStructure.bonus}</p>}
               </div>
             </div>
-            { !schedule ? <Schedule schedule={schedule} setSchedule={setSchedule}/> :
+            { !schedule ? <Schedule schedule={schedule} setSchedule={setSchedule} pricingStructure={pricingStructure}/> :
               <div className="md:w-[70%]flex flex-col items-center pl-4">
               <h1 className="hidden md:block text-3xl text-center mb-6">Finaliza tu inscripcion!</h1>
               <StripeContainer plan={pricingStructure.plan} success={success} setSuccess={setSuccess} loading={loading} setLoading={setLoading}/>
