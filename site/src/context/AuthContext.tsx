@@ -17,7 +17,12 @@ interface AuthContextType {
   data: UserDocData | null;
   getUserData: () => void;
   loading: boolean;
+  login: (email:string, password:string) => void;
+  logout: () => void;
+  resetPassword: (resetPassword:string) => void
+  updatePassword: (password:string) => void;
   subscribed: boolean;
+  subscriptionId: number
 }
 
 // const AuthContext = React.createContext()
