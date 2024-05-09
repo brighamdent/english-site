@@ -1,16 +1,17 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import longLogo from "../assets/longLogo.svg" 
-import { faBars, faX} from "@fortawesome/free-solid-svg-icons"; 
+import longLogo from "../assets/longLogo.svg";
+import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 
 export function Navbar() {
   const { currentUser, subscribed } = useAuth();
   const [isOpened, setIsOpened] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const toggleModal = () => {
     setIsOpened(!isOpened);
@@ -26,31 +27,51 @@ export function Navbar() {
         <div className="flex justify-between">
           <div className="flex text-right items-center pr-3 lg:hidden m-2">
             <button className="text-[40px] p-4" onClick={toggleModal}>
-              {isOpened ? <FontAwesomeIcon icon={faX} />:
-              <FontAwesomeIcon icon={faBars} />
-              }
+              {isOpened ? (
+                <FontAwesomeIcon icon={faX} />
+              ) : (
+                <FontAwesomeIcon icon={faBars} />
+              )}
             </button>
-            <img src={longLogo} className="h-10 ml-2"/>
+            <img src={longLogo} className="h-10 ml-2" />
           </div>
         </div>
 
         <div className="hidden lg:flex justify-between items-center">
-          <img src={longLogo} className="h-12 cursor-pointer" onClick={() => navigate('/')}/>
+          <img
+            src={longLogo}
+            className="h-12 cursor-pointer"
+            onClick={() => navigate("/")}
+          />
           <div className="flex justify-between w-[45%]">
-            <Link className="hover:border-b border-gray-300" to="/">Inicio</Link>
+            <Link className="hover:border-b border-gray-300" to="/">
+              Inicio
+            </Link>
             {subscribed ? (
-              <Link className="hover:border-b border-gray-300" to="dashboard">Tus Clases</Link>
+              <Link className="hover:border-b border-gray-300" to="dashboard">
+                Tus Clases
+              </Link>
             ) : (
-                <Link className="hover:border-b border-gray-300" to="/pricing">Costo</Link>
-              )}
-            <Link className="hover:border-b border-gray-300" to="/about">Quiénes Somos</Link>
+              <Link className="hover:border-b border-gray-300" to="/pricing">
+                Costo
+              </Link>
+            )}
+            <Link className="hover:border-b border-gray-300" to="/about">
+              Quiénes Somos
+            </Link>
           </div>
           {currentUser ? (
-            <Link className="hover:border-b border-gray-300 text-sm" to="/account">
+            <Link
+              className="hover:border-b border-gray-300 text-sm"
+              to="/account"
+            >
               Tu Cuenta
             </Link>
           ) : (
-            <Link className="hover:border-b border-gray-300 text-sm" to="signup">
+            <Link
+              className="hover:border-b border-gray-300 text-sm"
+              to="signup"
+            >
               Iniciar Sesión/Registrarse
             </Link>
           )}
@@ -63,14 +84,15 @@ export function Navbar() {
             <li className="p-2">
               <Link to="/">Inicio</Link>
             </li>
-            {subscribed ?
+            {subscribed ? (
               <li className="p-2">
                 <Link to="/dashboard">Tus Clases</Link>
-              </li> :
-                <li className="p-2">
-                  <Link to="/pricing">Costo</Link>
-                    </li>
-            }
+              </li>
+            ) : (
+              <li className="p-2">
+                <Link to="/pricing">Costo</Link>
+              </li>
+            )}
             <li className="p-2">
               <Link to="/about">Quiénes Somos</Link>
             </li>

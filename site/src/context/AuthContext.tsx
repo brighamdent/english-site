@@ -1,151 +1,174 @@
-import React, { useState, useContext, useEffect} from 'react'
-import { auth } from '../FireBase'
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useContext, createContext, useEffect } from "react";
+import { auth } from "../FireBase";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import { useLocation } from "react-router-dom";
 
-const AuthContext = React.createContext()
-
-export function useAuth(){
-  return useContext(AuthContext)
+interface UserDocData {
+  subscribed?: boolean;
+  subscriptionId?: string | null;
+  subscriptionItemId?: string;
+  subscriptionType?: string;
+  cancelAt?: number;
 }
 
-export function AuthProvider({children}) {
-  const [currentUser, setCurrentUser] = useState()
-  const [loading, setLoading] = useState()
-  const [subscribed, setSubscribed] = useState()
-  const [subscriptionId, setSubscriptionId] = useState(null)
-  const [data,setData] = useState()
-  const [getDataEffect, setGetDataEffect] = useState(false)
+interface AuthContextType {
+  currentUser: firebase.User | null;
+  data: UserDocData | null;
+  getUserData: () => void;
+  loading: boolean;
+  subscribed: boolean;
+}
 
-  const location = useLocation()
-  
+// const AuthContext = React.createContext()
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// export function useAuth() {
+//   return useContext(AuthContext);
+// }
+
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
+  const [data, setData] = useState<UserDocData | null>(null);
+  const [getDataEffect, setGetDataEffect] = useState(false);
+
+  const location = useLocation();
+
   const getCurrentTime = async () => {
-     try {
-    const response = await fetch('http://worldtimeapi.org/api/ip');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch("http://worldtimeapi.org/api/ip");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.unixtime;
+    } catch (error) {
+      console.error("Error fetching the Unix timestamp:", error);
+      return null;
     }
-    const data = await response.json();
-    return data.unixtime;
-  } catch (error) {
-    console.error('Error fetching the Unix timestamp:', error);
-    return null;
-  }
-  }
-  
+  };
+  console.log(currentUser);
+
   const getUserData = () => {
-    if (currentUser) {
-      const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
-      userRef.onSnapshot(doc => {
-    if (doc.exists) {
-      const data = doc.data();
-      setSubscribed(data.subscribed ?? false);
-      setSubscriptionId(data.subscriptionId ?? null);
-      setData(data);
-    } else {
-      // Handle the case where the document does not exist
-      setSubscribed(false);
-      setSubscriptionId(null);
-      setData(undefined); // or your initial state
+    if (currentUser && currentUser.email) {
+      const userRef = firebase
+        .firestore()
+        .collection("Users")
+        .doc(currentUser.email);
+      userRef.onSnapshot(
+        (doc) => {
+          if (doc.exists) {
+            const docData = doc.data() as UserDocData;
+            if (docData) {
+              setSubscribed(docData.subscribed ?? false);
+              setSubscriptionId(docData.subscriptionId ?? null);
+              setData(docData);
+            }
+          } else {
+            // Handle the case where the document does not exist
+            setSubscribed(false);
+            setSubscriptionId(null);
+            // setData(undefined); // or your initial state
+          }
+        },
+        (error) => {
+          console.error("Error listening to the document: ", error);
+          // Handle errors
+        },
+      );
     }
-  }, error => {
-    console.error("Error listening to the document: ", error);
-    // Handle errors
-  });
-  }
-  }
-  useEffect(() => {
-    if(data){ console.log(data.cancelAt) }
-  },[data])
+  };
 
   const checkSubscription = async () => {
-    const newDate = new Date( await getCurrentTime() )
-    if(data.cancelAt){
-      if((data.cancelAt - 100000) <= await getCurrentTime()){
-        const userRef = firebase.firestore().collection('Users').doc(currentUser.email);
+    if (data && data.cancelAt && currentUser && currentUser.email) {
+      if (data.cancelAt - 100000 <= (await getCurrentTime())) {
+        const userRef = firebase
+          .firestore()
+          .collection("Users")
+          .doc(currentUser.email);
         userRef.update({
           subscribed: false,
-          cancelAt: null
-        })
-        
+          cancelAt: null,
+        });
       }
     }
-   
-  }
-  
-  const signup = (email, password) => {
-    console.log('attempted signup')
-    return auth.createUserWithEmailAndPassword(email,password)
-  }
-  const createUserDoc = (email) => {
-    console.log('Createuserdoc is running	')
-    // const newUser = firebase.auth().currentUser;
-    // console.log(`new user: ${newUser}`)
-     return firebase.firestore().collection('Users').doc(email).set({
-          // Set initial fields (can be empty or with default values)
-          subscribed: false,
-          subscriptionId: 'none',
-          subscriptionItemId: 'none',
-          subscriptionType: 'none'
-          // Additional fields like 'displayName', 'birthday', etc. can be added here
-        });
-  }  
+  };
+
+  const signup = (email: string, password: string) => {
+    return auth.createUserWithEmailAndPassword(email, password);
+  };
+
+  const createUserDoc = (email: string) => {
+    return firebase.firestore().collection("Users").doc(email).set({
+      subscribed: false,
+      subscriptionId: "none",
+      subscriptionItemId: "none",
+      subscriptionType: "none",
+    });
+  };
+
   const verify = () => {
-    return auth.currentUser.sendEmailVerification()
-  }
+    if (auth && auth.currentUser) {
+      return auth.currentUser.sendEmailVerification();
+    }
+  };
 
+  const login = (email: string, password: string) => {
+    return auth.signInWithEmailAndPassword(email, password);
+  };
 
-  const login = (email,password) => {
-    return auth.signInWithEmailAndPassword(email,password)
-  }
+  const logout = () => {
+    setSubscribed(false);
+    return auth.signOut();
+  };
 
-  const logout = () =>{
-    setSubscribed(false)
-    return auth.signOut()
-  }
+  const resetPassword = (email: string) => {
+    return auth.sendPasswordResetEmail(email);
+  };
 
-  const resetPassword = (email) =>{
-    return auth.sendPasswordResetEmail(email)
-  }
-
-  const updateEmail = (email) => {
-    
-    console.log(currentUser)
-    console.log(email)
-      console.log('im returning')
+  const updateEmail = (email: string) => {
+    if (currentUser) {
       return currentUser.verifyBeforeUpdateEmail(email);
-
-  }
-
-  const updatePassword = (password) => {
-    if (currentUser){
-    return currentUser.updatePassword(password)
-
     }
-  }
+  };
 
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user)
-      setLoading(false)
-    })
-
-    return unsubscribe
-  },[])
-
-  useEffect(() => {
-    getCurrentTime()
-  },[currentUser])
-  
-  useEffect(() => {
-   console.log(`getDataEffect: ${getDataEffect}`) 
-   getUserData() 
-    if(data){
-    checkSubscription()
+  const updatePassword = (password: string) => {
+    if (currentUser) {
+      return currentUser.updatePassword(password);
     }
-  },[location.pathname,currentUser,getDataEffect])
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    getCurrentTime();
+  }, [currentUser]);
+
+  useEffect(() => {
+    console.log(`getDataEffect: ${getDataEffect}`);
+    getUserData();
+    if (data) {
+      checkSubscription();
+    }
+  }, [location.pathname, currentUser, getDataEffect]);
 
   const value = {
     currentUser,
@@ -163,12 +186,11 @@ export function AuthProvider({children}) {
     getUserData,
     data,
     getDataEffect,
-    setGetDataEffect
-  }
+    setGetDataEffect,
+  };
   return (
-  <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
-  )
+  );
 }
-
