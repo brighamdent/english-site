@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 
-export default function Schedule({schedule, setSchedule, pricingStructure}) {
+export default function Schedule({schedule, setSchedule, pricingStructure}:any) {
   
-  const handleClick = (e) => {
+  const handleClick = (e:any) => {
     e.preventDefault()
     setSchedule(e.target.textContent)
   }

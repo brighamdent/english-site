@@ -5,6 +5,7 @@ import "firebase/compat/firestore";
 import { useLocation } from "react-router-dom";
 
 interface UserDocData {
+  schedule: string;
   subscribed?: boolean;
   subscriptionId?: string | null;
   subscriptionItemId?: string;
@@ -14,15 +15,20 @@ interface UserDocData {
 
 interface AuthContextType {
   currentUser: firebase.User | null;
+  createUserDoc: (email: string) => null;
   data: UserDocData | null;
+  getDataEffect: boolean;
   getUserData: () => void;
   loading: boolean;
-  login: (email:string, password:string) => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
-  resetPassword: (resetPassword:string) => void
-  updatePassword: (password:string) => void;
+  resetPassword: (resetPassword: string) => void;
+  updateEmail: (email: string)=> void;
+  updatePassword: (password: string) => void;
+  setGetDataEffect: (status: boolean) => void
+  signup: (email: string, password: string) => void;
   subscribed: boolean;
-  subscriptionId: string | null
+  subscriptionId: string | null;
 }
 
 // const AuthContext = React.createContext()
@@ -89,7 +95,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
         (error) => {
           console.error("Error listening to the document: ", error);
-          // Handle errors
         },
       );
     }

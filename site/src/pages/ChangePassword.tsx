@@ -10,7 +10,7 @@ export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!currentUser || !currentUser.email) {
       return;

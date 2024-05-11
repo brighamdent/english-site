@@ -8,7 +8,7 @@ import Schedule from "../components/Schedule";
 import firebase from "firebase/compat/app";
 import { useAuth } from "../context/AuthContext";
 
-export function Payment(props) {
+export function Payment() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [schedule, setSchedule] = useState('');
@@ -16,6 +16,9 @@ export function Payment(props) {
   const location = useLocation();
   const pricingStructure = location.state?.data;
   const navigate = useNavigate()
+  if(!currentUser || !currentUser.email){
+    return;
+  }
   const userRef = firebase
     .firestore()
     .collection("Users")

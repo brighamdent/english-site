@@ -1,4 +1,4 @@
-function useUnixTimeToDate(unixTime) {
+function useUnixTimeToDate(unixTime: number) {
   const date = new Date(unixTime * 1000);
 
   const month = date.getMonth() + 1; // getMonth() is zero-based

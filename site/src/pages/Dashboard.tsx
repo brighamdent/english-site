@@ -9,9 +9,11 @@ export default function DashBoard() {
       <h1 className="text-3xl mb-4 border-b border-gray-300 p-2">Tus Clases</h1>
       <div className="flex items-center text-2xl mb-4">
         <FontAwesomeIcon icon={faGraduationCap} />
-        <h1 className="text-xl md:text-2xl pl-8">{data.subscriptionType}</h1>
+        {data && (
+          <h1 className="text-xl md:text-2xl pl-8">{data.subscriptionType}</h1>
+        )}
       </div>
-      <h3 className="mb-4">{data.schedule}</h3>
+      {data && <h3 className="mb-4">{data.schedule}</h3>}
       <a
         href="https://us06web.zoom.us/j/88265664418?pwd=Y1VQY2ZuVHVnMVNQSng5eUw3N1FUUT09"
         target="_blank"
