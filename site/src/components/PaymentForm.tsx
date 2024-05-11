@@ -18,9 +18,7 @@ import {
 
 export default function PaymentForm({
   plan,
-  success,
   setSuccess,
-  loading,
   setLoading,
 }) {
   const { currentUser, getUserData } = useAuth();
@@ -55,7 +53,7 @@ export default function PaymentForm({
     },
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     setError("");

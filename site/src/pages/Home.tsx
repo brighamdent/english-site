@@ -1,5 +1,4 @@
 import graphic from '../assets/graphic.png'
-import recommendation from '../assets/recommendation.png'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 export function Home(){

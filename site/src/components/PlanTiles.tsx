@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-export function PlanTiles(props) {
+export function PlanTiles(props:any) {
   const { data } = useAuth();
   const pricingStuctures = [
     {
@@ -55,16 +55,17 @@ export function PlanTiles(props) {
           {props.manageSubscriptionPage && (
             <div
               className={
+                data &&
                 p.name == data.subscriptionType
                   ? "rounded bg-gray-300 text-black/50 text-2xl p-3 flex justify-center items-center"
                   : "rounded bg-blue-200 hover:bg-blue-300 text-2xl p-3 flex justify-center items-center"
               }
             >
               <button
-                disabled={p.name == data.subscriptionType}
+                disabled={data ? p.name == data.subscriptionType : false}
                 onClick={() => props.handleChangeSubscription(p.plan)}
               >
-                {p.name == data.subscriptionType ? "Plan Actual" : "Cambiar Plan"}
+                {p.name == data && data.subscriptionType ? "Plan Actual" : "Cambiar Plan"}
               </button>
             </div>
           )}

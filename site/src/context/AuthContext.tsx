@@ -22,7 +22,7 @@ interface AuthContextType {
   resetPassword: (resetPassword:string) => void
   updatePassword: (password:string) => void;
   subscribed: boolean;
-  subscriptionId: number
+  subscriptionId: string | null
 }
 
 // const AuthContext = React.createContext()
