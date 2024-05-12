@@ -16,11 +16,7 @@ import {
   CardCvcElement,
 } from "@stripe/react-stripe-js";
 
-export default function PaymentForm({
-  plan,
-  setSuccess,
-  setLoading,
-}) {
+export default function PaymentForm({ plan, setSuccess, setLoading }: any) {
   const { currentUser, getUserData } = useAuth();
   const [error, setError] = useState("");
 
@@ -69,9 +65,10 @@ export default function PaymentForm({
     const name = `${firstName} ${lastName}`;
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
+      type: "cardnumber",
       card: cardNumberElement,
     });
+
     if (!error) {
       try {
         const { id } = paymentMethod;
