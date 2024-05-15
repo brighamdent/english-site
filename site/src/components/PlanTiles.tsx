@@ -67,7 +67,7 @@ export function PlanTiles(props: any) {
                 onClick={() => props.handleChangeSubscription(p.plan)}
               >
                 1
-                {p.name == data && data.subscriptionType
+                {data && p.name == data.subscriptionType
                   ? "Plan Actual"
                   : "Cambiar Plan"}
               </button>

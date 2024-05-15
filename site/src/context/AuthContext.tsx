@@ -15,7 +15,7 @@ interface UserDocData {
 
 interface AuthContextType {
   currentUser: firebase.User | null;
-  createUserDoc: (email: string) => null;
+  createUserDoc: (email: string) => void;
   data: UserDocData | null;
   getDataEffect: boolean;
   getUserData: () => void;
@@ -29,6 +29,7 @@ interface AuthContextType {
   signup: (email: string, password: string) => void;
   subscribed: boolean;
   subscriptionId: string | null;
+  verify: () => void;
 }
 
 // const AuthContext = React.createContext()
@@ -69,7 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return null;
     }
   };
-  console.log(currentUser);
 
   const getUserData = () => {
     if (currentUser && currentUser.email) {
@@ -180,7 +180,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [location.pathname, currentUser, getDataEffect]);
 
-  const value = {
+  const value:AuthContextType = {
     currentUser,
     loading,
     subscribed,

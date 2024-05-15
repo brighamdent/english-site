@@ -43,7 +43,7 @@ export default function ForgotPassword() {
           </fieldset>
           <button
             disabled={loading}
-            classname="w-full bg-blue-200 rounded-lg h-14"
+            className="w-full bg-blue-200 rounded-lg h-14"
           >
             Restablecer Contraseña
           </button>

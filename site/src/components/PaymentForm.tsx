@@ -65,7 +65,7 @@ export default function PaymentForm({ plan, setSuccess, setLoading }: any) {
     const name = `${firstName} ${lastName}`;
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "cardnumber",
+      type: "card",
       card: cardNumberElement,
     });
 
