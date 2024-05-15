@@ -58,11 +58,16 @@ export default function PaymentForm({ plan, setSuccess, setLoading }: any) {
       return;
     }
 
-    const cardNumberElement = elements.getElement(CardNumberElement);
+    const cardNumberElement = elements.getElement(CardNumberElement) as any;
 
     const firstName = event.target.firstName.value;
     const lastName = event.target.lastName.value;
     const name = `${firstName} ${lastName}`;
+
+    // const { error, paymentMethod } = await stripe.createPaymentMethod({ type: "card",
+    //   card: cardNumberElement,
+    // });
+
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
