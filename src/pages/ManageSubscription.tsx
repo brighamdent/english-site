@@ -17,14 +17,14 @@ import {
 import { PlanTiles } from "../components/PlanTiles";
 
 interface SubscriptionData {
-  current_period_end: number
+  current_period_end: number;
 }
 
 export const ManageSubscription = () => {
   const { currentUser, subscriptionId, data, getDataEffect, setGetDataEffect } =
     useAuth();
   const [message, setMessage] = useState("");
-  if(!currentUser || !currentUser.email){
+  if (!currentUser || !currentUser.email) {
     return;
   }
   const userRef = firebase
@@ -72,9 +72,12 @@ export const ManageSubscription = () => {
     setLoading(true);
     setDropDown(false);
     try {
-      await axios.post("http://localhost:4000/resume-subscription", {
-        subscriptionId,
-      });
+      await axios.post(
+        "https://english-site-server.onrender.com/resume-subscription",
+        {
+          subscriptionId,
+        },
+      );
       userRef.update({
         cancelAt: null,
       });
@@ -89,9 +92,12 @@ export const ManageSubscription = () => {
 
   const getSubscriptionData = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/retrieve-data", {
-        subscriptionId,
-      });
+      const response = await axios.post(
+        "https://english-site-server.onrender.com/retrieve-data",
+        {
+          subscriptionId,
+        },
+      );
       setSubData(response.data.subscription);
     } catch (error) {
       console.log(error);
@@ -105,7 +111,7 @@ export const ManageSubscription = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/update-subscription",
+        "https://english-site-server.onrender.com/update-subscription",
         {
           subscriptionId,
           subscriptionItemId: data ? data.subscriptionItemId : "",

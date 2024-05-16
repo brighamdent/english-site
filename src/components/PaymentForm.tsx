@@ -68,7 +68,6 @@ export default function PaymentForm({ plan, setSuccess, setLoading }: any) {
     //   card: cardNumberElement,
     // });
 
-
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: cardNumberElement,
@@ -77,12 +76,15 @@ export default function PaymentForm({ plan, setSuccess, setLoading }: any) {
     if (!error) {
       try {
         const { id } = paymentMethod;
-        const response = await axios.post("http://localhost:4000/payment", {
-          plan: plan,
-          id,
-          name,
-          email: currentUser.email,
-        });
+        const response = await axios.post(
+          "https://english-site-server.onrender.com/payment",
+          {
+            plan: plan,
+            id,
+            name,
+            email: currentUser.email,
+          },
+        );
         if (response.data.success) {
           console.log("Successful payment");
           const customerId = response.data.customerId;
