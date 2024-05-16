@@ -51,7 +51,7 @@ export function PlanTiles(props: any) {
               to="/payment"
               state={{ data: pricingStuctures[index] }}
             >
-              <button>Seleccionar Plan</button>
+              <button>Selectionar Plan</button>
             </Link>
           )}
           {props.manageSubscriptionPage && (
