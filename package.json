@@ -2,7 +2,7 @@
   "name": "english-site",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://brighamdent.github.io/english-site/",
+  "homepage": "https://brighamdent.github.io/inglesdirecto-site/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,7 @@
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.5",
     "firebase": "^10.7.1",
+    "gh-pages": "^6.1.1",
     "postcss": "^8.4.33",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
