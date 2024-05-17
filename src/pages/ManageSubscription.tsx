@@ -43,7 +43,7 @@ export const ManageSubscription = () => {
     setDropDown(false);
     try {
       const response = await axios.post(
-        "http://localhost:4000/cancel-subscription",
+        "https://english-site-server.onrender.com/cancel-subscription",
         {
           subscriptionId,
         },
