@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
+import axios from "axios";
 import { auth } from "../FireBase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -23,9 +24,9 @@ interface AuthContextType {
   login: (email: string, password: string) => void;
   logout: () => void;
   resetPassword: (resetPassword: string) => void;
-  updateEmail: (email: string)=> void;
+  updateEmail: (email: string) => void;
   updatePassword: (password: string) => void;
-  setGetDataEffect: (status: boolean) => void
+  setGetDataEffect: (status: boolean) => void;
   signup: (email: string, password: string) => void;
   subscribed: boolean;
   subscriptionId: string | null;
@@ -59,12 +60,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const getCurrentTime = async () => {
     try {
-      const response = await fetch("http://worldtimeapi.org/api/ip");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.unixtime;
+      const response = await axios.get("https://worldtimeapi.org/api/ip");
+      return response.data.unixtime;
     } catch (error) {
       console.error("Error fetching the Unix timestamp:", error);
       return null;
@@ -180,7 +177,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [location.pathname, currentUser, getDataEffect]);
 
-  const value:AuthContextType = {
+  const value: AuthContextType = {
     currentUser,
     loading,
     subscribed,
