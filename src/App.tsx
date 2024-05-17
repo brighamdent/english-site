@@ -1,4 +1,6 @@
 import "./App.css";
+import { useEffect } from "react";
+import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Pricing } from "./pages/Pricing";
@@ -17,6 +19,16 @@ import { ManageSubscription } from "./pages/ManageSubscription";
 import ChangePassword from "./pages/ChangePassword";
 
 function App() {
+  useEffect(() => {
+    axios
+      .get("https://english-site-server.onrender.com/warmup")
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error warming up the server:", error);
+      });
+  }, []);
   return (
     <>
       <AuthProvider>

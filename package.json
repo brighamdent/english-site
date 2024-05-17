@@ -2,7 +2,7 @@
   "name": "english-site",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://brighamdent.github.io/inglesdirecto-site/",
+  "homepage": "https://inglesdirecto.com/",
   "type": "module",
   "scripts": {
     "dev": "vite",
