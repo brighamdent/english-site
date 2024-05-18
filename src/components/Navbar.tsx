@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import longLogo from "../assets/longLogo.svg";
+import longLogoSpanish from "../assets/longLogoSpanish.svg";
 import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 
 export function Navbar() {
@@ -32,13 +32,13 @@ export function Navbar() {
                 <FontAwesomeIcon icon={faBars} />
               )}
             </button>
-            <img src={longLogo} className="h-10 ml-2" />
+            <img src={longLogoSpanish} className="h-10 ml-2" />
           </div>
         </div>
 
         <div className="hidden lg:flex justify-between items-center">
           <img
-            src={longLogo}
+            src={longLogoSpanish}
             className="h-12 cursor-pointer"
             onClick={() => navigate("/")}
           />
