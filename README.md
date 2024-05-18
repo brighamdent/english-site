@@ -29,7 +29,7 @@ Ingles Directo utilizes Tailwind CSS, a utility-first CSS framework, for styling
 Firebase serves as the backend infrastructure for Ingles Directo, providing a comprehensive suite of services for app development. The application leverages Firebase Authentication for user authentication, Firebase Realtime Database for real-time data synchronization, and Firebase Hosting for seamless deployment and hosting.
 
 #### Firebase Authentication
-Firebase Authentication offers secure authentication mechanisms, including email/password authentication and social sign-in methods, ensuring a seamless and secure login experience for users.
+Firebase Authentication offers secure authentication mechanisms, including email/password authenticatio, ensuring a seamless and secure login experience for users.
 
 #### Firebase Realtime Database
 Firebase Realtime Database enables real-time data synchronization between clients, allowing for instant updates and collaboration. Its NoSQL data model provides flexibility and scalability, accommodating the dynamic needs of the application.
