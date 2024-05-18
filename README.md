@@ -9,7 +9,7 @@ Ingles Directo is an online platform crafted specifically for my English teachin
 - Authentication through Firebase
 - Subscription management (cancel, upgrade, downgrade)
 - Account management (change email, change password, etc.)
-- Uses custom node.js express server to handle credit card payments through Stripe
+- Uses custom node.js express [server](https://github.com/brighamdent/inglesdirecto-server) to handle credit card payments through Stripe
 
 ## Technologies Used
 
@@ -93,7 +93,7 @@ In designing Ingles Directo, several key considerations were taken into account 
     ```
 
 Note - If you would like to use you own local payment server please visit the [server
-repository](inglesdirecto.com) for more information.
+repository](https://github.com/brighamdent/inglesdirecto-server) for more information.
 
 ## How to Contribute
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
