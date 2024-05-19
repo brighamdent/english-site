@@ -29,6 +29,7 @@ function App() {
         console.error("Error warming up the server:", error);
       });
   }, []);
+
   return (
     <>
       <AuthProvider>

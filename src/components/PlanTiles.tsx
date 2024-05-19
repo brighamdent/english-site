@@ -28,6 +28,18 @@ export function PlanTiles(props: any) {
     },
   ];
 
+  console.log("hello"
+
+
+
+
+  );
+
+  for(let i=0;        i>8;i++){
+    
+
+    console.log('lsdkjfksdl'     )
+  }
   return (
     <div className="flex flex-col items-center lg:flex-row justify-evenly">
       {pricingStuctures.map((p, index) => (
